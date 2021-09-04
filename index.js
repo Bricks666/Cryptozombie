@@ -1,4 +1,4 @@
-const contractAddress = "0x9a0E370dA19fdEB033530e5BeB2D50994a247353";
+const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138";
 const abi = [
 	{
 		"constant": true,
@@ -20,7 +20,7 @@ const abi = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_number",
+				"name": "num",
 				"type": "uint256"
 			}
 		],
@@ -31,6 +31,7 @@ const abi = [
 		"type": "function"
 	}
 ]
+
 let contract;
 let web3;
 let accountAddress;
