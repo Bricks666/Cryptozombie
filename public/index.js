@@ -9,6 +9,94 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/Errors/RangeError.js":
+/*!**********************************!*\
+  !*** ./src/Errors/RangeError.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"RangeErrorE\": () => (/* binding */ RangeErrorE)\n/* harmony export */ });\nclass RangeErrorE extends RangeError {\n  #code;\n\n  constructor(message, code) {\n    super(message);\n    this.#code = code;\n  }\n\n  get code() {\n    return this.#code;\n  }\n}\n\n\n//# sourceURL=webpack://interface/./src/Errors/RangeError.js?");
+
+/***/ }),
+
+/***/ "./src/HTMLElements.js":
+/*!*****************************!*\
+  !*** ./src/HTMLElements.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"accountName\": () => (/* binding */ accountName),\n/* harmony export */   \"connectButton\": () => (/* binding */ connectButton),\n/* harmony export */   \"getNumberField\": () => (/* binding */ getNumberField),\n/* harmony export */   \"getNumberButton\": () => (/* binding */ getNumberButton),\n/* harmony export */   \"setNumberField\": () => (/* binding */ setNumberField),\n/* harmony export */   \"setNumberButton\": () => (/* binding */ setNumberButton)\n/* harmony export */ });\nconst accountName = document.querySelector(\".account-name\");\nconst connectButton = document.querySelector(\".connect\");\nconst getNumberField = document.querySelector(\".get-number__field\");\nconst getNumberButton = document.querySelector(\".get-number__button\");\nconst setNumberField = document.querySelector(\".set-number__field\");\nconst setNumberButton = document.querySelector(\".set-number__button\");\n\n\n//# sourceURL=webpack://interface/./src/HTMLElements.js?");
+
+/***/ }),
+
+/***/ "./src/buttons.js":
+/*!************************!*\
+  !*** ./src/buttons.js ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getNumber\": () => (/* binding */ getNumber),\n/* harmony export */   \"setNumber\": () => (/* binding */ setNumber)\n/* harmony export */ });\n/* harmony import */ var _errorsHandler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./errorsHandler */ \"./src/errorsHandler.js\");\n/* harmony import */ var _Errors_RangeError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Errors/RangeError */ \"./src/Errors/RangeError.js\");\n\n\n\nfunction isValid(value) {\n  return isNaN(value) || value < 0;\n}\n\nasync function getNumber(contract, field) {\n  try {\n    field.value = await contract.methods.getNumber().call();\n  } catch (e) {\n    (0,_errorsHandler__WEBPACK_IMPORTED_MODULE_0__.errorsHandler)(e);\n  }\n}\n\nasync function setNumber(contract, accountAddress, field) {\n  const value = Number(field.value); //Нужно перенести валидацию размера на сторону данный\n\n  field.value = \"\";\n\n  try {\n    if (isValid(value)) {\n      throw new _Errors_RangeError__WEBPACK_IMPORTED_MODULE_1__.RangeErrorE(\n        `для установки допустимы только неотрицательные числа`,\n        -1\n      );\n    }\n\n    await contract.methods.setNumber(value).send({ from: accountAddress });\n  } catch (e) {\n    (0,_errorsHandler__WEBPACK_IMPORTED_MODULE_0__.errorsHandler)(e);\n  }\n}\n\n\n//# sourceURL=webpack://interface/./src/buttons.js?");
+
+/***/ }),
+
+/***/ "./src/changeAccountName.js":
+/*!**********************************!*\
+  !*** ./src/changeAccountName.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"changeAccountName\": () => (/* binding */ changeAccountName)\n/* harmony export */ });\n/* harmony import */ var _HTMLElements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./HTMLElements */ \"./src/HTMLElements.js\");\n\n\nfunction changeAccountName(newAddress, intervalId, accountChanged) {\n  if (newAddress === undefined) {\n    alert(\"Please, enter to your Metamask's account and connect again\");\n\n    clearTimeout(intervalId);\n\n    return;\n  }\n\n  if (newAddress !== _HTMLElements__WEBPACK_IMPORTED_MODULE_0__.accountName.value) {\n    _HTMLElements__WEBPACK_IMPORTED_MODULE_0__.accountName.innerHTML = newAddress;\n    accountChanged(newAddress);\n  }\n}\n\n\n//# sourceURL=webpack://interface/./src/changeAccountName.js?");
+
+/***/ }),
+
+/***/ "./src/changeButtonsLock.js":
+/*!**********************************!*\
+  !*** ./src/changeButtonsLock.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"disableButtons\": () => (/* binding */ disableButtons),\n/* harmony export */   \"enableButtons\": () => (/* binding */ enableButtons)\n/* harmony export */ });\nfunction disableButton(button) {\n  button.disabled = true;\n}\n\nfunction disableButtons(...buttons) {\n  for (let button of buttons) {\n    disableButton(button);\n  }\n}\n\nfunction enableButton(button) {\n  button.disabled = false;\n}\n\nfunction enableButtons(...buttons) {\n  for (let button of buttons) {\n    enableButton(button);\n  }\n}\n\n\n//# sourceURL=webpack://interface/./src/changeButtonsLock.js?");
+
+/***/ }),
+
+/***/ "./src/connect.js":
+/*!************************!*\
+  !*** ./src/connect.js ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"connect\": () => (/* binding */ connect)\n/* harmony export */ });\nasync function connect(contractInfo, web3) {\n  let contract = await new web3.eth.Contract(\n    contractInfo.abi,\n    contractInfo.address\n  );\n\n  return contract;\n}\n\n\n//# sourceURL=webpack://interface/./src/connect.js?");
+
+/***/ }),
+
+/***/ "./src/errorsHandler.js":
+/*!******************************!*\
+  !*** ./src/errorsHandler.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"errorsHandler\": () => (/* binding */ errorsHandler)\n/* harmony export */ });\nconst errorsHandler = (e) => {\n  switch (e.code) {\n    case 4001: {\n      alert(\"Транзакция была отклонена\");\n      break;\n    }\n    case -1: {\n      alert(`Выход за допустимые пределы, ${e.message}`);\n      break;\n    }\n    default: {\n      alert(\n        `Произошла ошибка, пожалуйста, попробуйте позже или обратитесь в поддержку ${e.message}`\n      );\n    }\n  }\n};\n\n\n//# sourceURL=webpack://interface/./src/errorsHandler.js?");
+
+/***/ }),
+
+/***/ "./src/getAccountAddress.js":
+/*!**********************************!*\
+  !*** ./src/getAccountAddress.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getAccountAddress\": () => (/* binding */ getAccountAddress)\n/* harmony export */ });\nasync function getAccountAddress(web3) {\n  return (await web3.eth.getAccounts())[0];\n}\n\n\n//# sourceURL=webpack://interface/./src/getAccountAddress.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -16,7 +104,29 @@
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _web3_min__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./web3.min */ \"./src/web3.min.js\");\n/* harmony import */ var _web3_min__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_web3_min__WEBPACK_IMPORTED_MODULE_0__);\n\n\nconst contractAddress = \"0xF5D722995691abeB985E3C6848A0774e51036DFD\";\nconst abi = [\n  {\n    constant: true,\n    inputs: [],\n    name: \"getNumber\",\n    outputs: [\n      {\n        internalType: \"uint256\",\n        name: \"\",\n        type: \"uint256\",\n      },\n    ],\n    payable: false,\n    stateMutability: \"view\",\n    type: \"function\",\n  },\n  {\n    constant: false,\n    inputs: [\n      {\n        internalType: \"uint256\",\n        name: \"num\",\n        type: \"uint256\",\n      },\n    ],\n    name: \"setNumber\",\n    outputs: [],\n    payable: false,\n    stateMutability: \"nonpayable\",\n    type: \"function\",\n  },\n];\n\nlet contract;\nlet web3;\nlet accountAddress;\n\nconst accountName = document.querySelector(\".account-name\");\nconst connectButton = document.querySelector(\".connect\");\nconst getNumberField = document.querySelector(\".get-number__field\");\nconst getNumberButton = document.querySelector(\".get-number__button\");\nconst setNumberField = document.querySelector(\".set-number__field\");\nconst setNumberButton = document.querySelector(\".set-number__button\");\n\ngetNumberButton.addEventListener(\"click\", getNumber);\nsetNumberButton.addEventListener(\"click\", setNumber);\n\nconnectButton.onclick = () => {\n  if (web3 === undefined) {\n    web3 = instantiateWeb3();\n  }\n\n  connect();\n};\n\nfunction instantiateWeb3() {\n  if (window.web3 === undefined) {\n    console.log(\"Web3 didn't detect\");\n\n    return new (_web3_min__WEBPACK_IMPORTED_MODULE_0___default())(\n      window.web3.providers.HttpProvider(\"http://localhost:8545'\")\n    );\n  } else {\n    console.log(\"Using Metamask's provider\");\n\n    return new (_web3_min__WEBPACK_IMPORTED_MODULE_0___default())(window.web3.currentProvider);\n  }\n}\n\nasync function connect() {\n  getNumberButton.disabled = true;\n  setNumberButton.disabled = true;\n\n  if (contract === undefined) {\n    contract = new web3.eth.Contract(abi, contractAddress);\n  }\n\n  accountAddress = (await web3.eth.getAccounts())[0];\n\n  if (accountAddress !== undefined) {\n    accountName.innerHTML = accountAddress;\n    connectButton.innerHTML = \"Reconnect\";\n\n    getNumberButton.disabled = false;\n    setNumberButton.disabled = false;\n\n    const id = setInterval(() => refreshAccount(id), 500);\n\n    return;\n  }\n\n  alert(\"Please, enter to your Metamask's account\");\n}\n\nasync function refreshAccount(intervalId) {\n  const newAdress = (await web3.eth.getAccounts())[0];\n\n  if (newAdress === undefined) {\n    alert(\"Please, enter to your Metamask's account and connect again\");\n\n    connectButton.innerHTML = \"Connect\";\n\n    clearTimeout(intervalId);\n\n    return;\n  }\n\n  if (newAdress !== accountName.value) {\n    accountName.innerHTML = accountAddress = newAdress;\n  }\n}\n\nasync function getNumber() {\n  getNumberButton.disabled = true;\n\n  const value = await contract.methods.getNumber().call();\n  console.log(value);\n\n  getNumberField.value = value;\n\n  getNumberButton.disabled = false;\n}\n\nasync function setNumber() {\n  setNumberButton.disabled = true;\n\n  let value;\n  try {\n    value = Number(setNumberField.value);\n  } catch (e) {\n    console.log(e.message);\n  }\n  setNumberField.value = \"\";\n\n  if (isNaN(value)) {\n    alert(`${value} isn't number`);\n\n    setNumberButton.disabled = false;\n\n    return;\n  }\n\n  await contract.methods.setNumber(value).send({ from: accountAddress });\n\n  setNumberButton.disabled = false;\n}\n\n\n//# sourceURL=webpack://interface/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _HTMLElements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./HTMLElements */ \"./src/HTMLElements.js\");\n/* harmony import */ var _getAccountAddress__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getAccountAddress */ \"./src/getAccountAddress.js\");\n/* harmony import */ var _buttons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./buttons */ \"./src/buttons.js\");\n/* harmony import */ var _changeButtonsLock__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./changeButtonsLock */ \"./src/changeButtonsLock.js\");\n/* harmony import */ var _connect__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./connect */ \"./src/connect.js\");\n/* harmony import */ var _instantiateWeb3__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./instantiateWeb3 */ \"./src/instantiateWeb3.js\");\n/* harmony import */ var _refreshAccount__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./refreshAccount */ \"./src/refreshAccount.js\");\n\n\n\n\n\n\n\n\nconst contractInfo = {\n  abi: [\n    {\n      constant: true,\n      inputs: [],\n      name: \"getNumber\",\n      outputs: [\n        {\n          internalType: \"uint256\",\n          name: \"\",\n          type: \"uint256\",\n        },\n      ],\n      payable: false,\n      stateMutability: \"view\",\n      type: \"function\",\n    },\n    {\n      constant: false,\n      inputs: [\n        {\n          internalType: \"uint256\",\n          name: \"num\",\n          type: \"uint256\",\n        },\n      ],\n      name: \"setNumber\",\n      outputs: [],\n      payable: false,\n      stateMutability: \"nonpayable\",\n      type: \"function\",\n    },\n  ],\n  address: \"0xF5D722995691abeB985E3C6848A0774e51036DFD\",\n};\n\nlet contract;\nlet web3;\nlet accountAddress;\nlet intervalId;\n\nconst accountChanged = (newAddress) => {\n  accountAddress = newAddress;\n};\n\nwindow.onload = () =>\n  (0,_changeButtonsLock__WEBPACK_IMPORTED_MODULE_3__.disableButtons)(_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.getNumberButton, _HTMLElements__WEBPACK_IMPORTED_MODULE_0__.setNumberButton);\n\n_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.connectButton.addEventListener(\"click\", async () => {\n  (0,_changeButtonsLock__WEBPACK_IMPORTED_MODULE_3__.disableButtons)(_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.getNumberButton, _HTMLElements__WEBPACK_IMPORTED_MODULE_0__.setNumberButton);\n\n  clearInterval(intervalId);\n\n  if (web3 === undefined) {\n    web3 = (0,_instantiateWeb3__WEBPACK_IMPORTED_MODULE_5__.instantiateWeb3)();\n  }\n\n  contract = await (0,_connect__WEBPACK_IMPORTED_MODULE_4__.connect)(contractInfo, web3);\n\n  accountAddress = await (0,_getAccountAddress__WEBPACK_IMPORTED_MODULE_1__.getAccountAddress)(web3);\n\n  intervalId = setInterval(\n    () => (0,_refreshAccount__WEBPACK_IMPORTED_MODULE_6__.refreshAccount)(intervalId, web3, accountChanged),\n    500\n  );\n\n  (0,_changeButtonsLock__WEBPACK_IMPORTED_MODULE_3__.enableButtons)(_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.getNumberButton, _HTMLElements__WEBPACK_IMPORTED_MODULE_0__.setNumberButton);\n});\n\n_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.getNumberButton.addEventListener(\"click\", async () => {\n  (0,_changeButtonsLock__WEBPACK_IMPORTED_MODULE_3__.disableButtons)(_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.getNumberButton);\n\n  await (0,_buttons__WEBPACK_IMPORTED_MODULE_2__.getNumber)(contract, _HTMLElements__WEBPACK_IMPORTED_MODULE_0__.getNumberField);\n\n  (0,_changeButtonsLock__WEBPACK_IMPORTED_MODULE_3__.enableButtons)(_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.getNumberButton);\n});\n\n_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.setNumberButton.addEventListener(\"click\", async () => {\n  (0,_changeButtonsLock__WEBPACK_IMPORTED_MODULE_3__.disableButtons)(_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.setNumberButton);\n\n  await (0,_buttons__WEBPACK_IMPORTED_MODULE_2__.setNumber)(contract, accountAddress, _HTMLElements__WEBPACK_IMPORTED_MODULE_0__.setNumberField);\n\n  (0,_changeButtonsLock__WEBPACK_IMPORTED_MODULE_3__.enableButtons)(_HTMLElements__WEBPACK_IMPORTED_MODULE_0__.setNumberButton);\n});\n\n\n//# sourceURL=webpack://interface/./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/instantiateWeb3.js":
+/*!********************************!*\
+  !*** ./src/instantiateWeb3.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"instantiateWeb3\": () => (/* binding */ instantiateWeb3)\n/* harmony export */ });\n/* harmony import */ var _web3_min__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./web3.min */ \"./src/web3.min.js\");\n/* harmony import */ var _web3_min__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_web3_min__WEBPACK_IMPORTED_MODULE_0__);\n\n\nfunction instantiateWeb3() {\n  if (window.web3 === undefined) {\n    console.log(\"Web3 didn't detect\");\n\n    return new (_web3_min__WEBPACK_IMPORTED_MODULE_0___default())(\n      window.web3.providers.HttpProvider(\"http://localhost:8545'\")\n    );\n  } else {\n    console.log(\"Using Metamask's provider\");\n\n    return new (_web3_min__WEBPACK_IMPORTED_MODULE_0___default())(window.web3.currentProvider);\n  }\n}\n\n\n//# sourceURL=webpack://interface/./src/instantiateWeb3.js?");
+
+/***/ }),
+
+/***/ "./src/refreshAccount.js":
+/*!*******************************!*\
+  !*** ./src/refreshAccount.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"refreshAccount\": () => (/* binding */ refreshAccount)\n/* harmony export */ });\n/* harmony import */ var _changeAccountName__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./changeAccountName */ \"./src/changeAccountName.js\");\n\n\nasync function refreshAccount(intervalId, web3, accountChanged) {\n  const newAddress = (await web3.eth.getAccounts())[0];\n\n  (0,_changeAccountName__WEBPACK_IMPORTED_MODULE_0__.changeAccountName)(newAddress, intervalId, accountChanged);\n}\n\n\n//# sourceURL=webpack://interface/./src/refreshAccount.js?");
 
 /***/ }),
 

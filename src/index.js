@@ -1,149 +1,92 @@
-import Web3  from "./web3.min";
+import * as HTMLElements from "./HTMLElements";
+import { getAccountAddress } from "./getAccountAddress";
+import { getNumber, setNumber } from "./buttons";
+import { disableButtons, enableButtons } from "./changeButtonsLock";
+import { connect } from "./connect";
+import { instantiateWeb3 } from "./instantiateWeb3";
+import { refreshAccount } from "./refreshAccount";
 
-const contractAddress = "0xF5D722995691abeB985E3C6848A0774e51036DFD";
-const abi = [
-  {
-    constant: true,
-    inputs: [],
-    name: "getNumber",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "num",
-        type: "uint256",
-      },
-    ],
-    name: "setNumber",
-    outputs: [],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-];
+const contractInfo = {
+  abi: [
+    {
+      constant: true,
+      inputs: [],
+      name: "getNumber",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      payable: false,
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "num",
+          type: "uint256",
+        },
+      ],
+      name: "setNumber",
+      outputs: [],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+  ],
+  address: "0xF5D722995691abeB985E3C6848A0774e51036DFD",
+};
 
 let contract;
 let web3;
 let accountAddress;
+let intervalId;
 
-const accountName = document.querySelector(".account-name");
-const connectButton = document.querySelector(".connect");
-const getNumberField = document.querySelector(".get-number__field");
-const getNumberButton = document.querySelector(".get-number__button");
-const setNumberField = document.querySelector(".set-number__field");
-const setNumberButton = document.querySelector(".set-number__button");
+const accountChanged = (newAddress) => {
+  accountAddress = newAddress;
+};
 
-getNumberButton.addEventListener("click", getNumber);
-setNumberButton.addEventListener("click", setNumber);
+window.onload = () =>
+  disableButtons(HTMLElements.getNumberButton, HTMLElements.setNumberButton);
 
-connectButton.onclick = () => {
+HTMLElements.connectButton.addEventListener("click", async () => {
+  disableButtons(HTMLElements.getNumberButton, HTMLElements.setNumberButton);
+
+  clearInterval(intervalId);
+
   if (web3 === undefined) {
     web3 = instantiateWeb3();
   }
 
-  connect();
-};
+  contract = await connect(contractInfo, web3);
 
-function instantiateWeb3() {
-  if (window.web3 === undefined) {
-    console.log("Web3 didn't detect");
+  accountAddress = await getAccountAddress(web3);
 
-    return new Web3(
-      window.web3.providers.HttpProvider("http://localhost:8545'")
-    );
-  } else {
-    console.log("Using Metamask's provider");
+  intervalId = setInterval(
+    () => refreshAccount(intervalId, web3, accountChanged),
+    500
+  );
 
-    return new Web3(window.web3.currentProvider);
-  }
-}
+  enableButtons(HTMLElements.getNumberButton, HTMLElements.setNumberButton);
+});
 
-async function connect() {
-  getNumberButton.disabled = true;
-  setNumberButton.disabled = true;
+HTMLElements.getNumberButton.addEventListener("click", async () => {
+  disableButtons(HTMLElements.getNumberButton);
 
-  if (contract === undefined) {
-    contract = new web3.eth.Contract(abi, contractAddress);
-  }
+  await getNumber(contract, HTMLElements.getNumberField);
 
-  accountAddress = (await web3.eth.getAccounts())[0];
+  enableButtons(HTMLElements.getNumberButton);
+});
 
-  if (accountAddress !== undefined) {
-    accountName.innerHTML = accountAddress;
-    connectButton.innerHTML = "Reconnect";
+HTMLElements.setNumberButton.addEventListener("click", async () => {
+  disableButtons(HTMLElements.setNumberButton);
 
-    getNumberButton.disabled = false;
-    setNumberButton.disabled = false;
+  await setNumber(contract, accountAddress, HTMLElements.setNumberField);
 
-    const id = setInterval(() => refreshAccount(id), 500);
-
-    return;
-  }
-
-  alert("Please, enter to your Metamask's account");
-}
-
-async function refreshAccount(intervalId) {
-  const newAdress = (await web3.eth.getAccounts())[0];
-
-  if (newAdress === undefined) {
-    alert("Please, enter to your Metamask's account and connect again");
-
-    connectButton.innerHTML = "Connect";
-
-    clearTimeout(intervalId);
-
-    return;
-  }
-
-  if (newAdress !== accountName.value) {
-    accountName.innerHTML = accountAddress = newAdress;
-  }
-}
-
-async function getNumber() {
-  getNumberButton.disabled = true;
-
-  const value = await contract.methods.getNumber().call();
-  console.log(value);
-
-  getNumberField.value = value;
-
-  getNumberButton.disabled = false;
-}
-
-async function setNumber() {
-  setNumberButton.disabled = true;
-
-  let value;
-  try {
-    value = Number(setNumberField.value);
-  } catch (e) {
-    console.log(e.message);
-  }
-  setNumberField.value = "";
-
-  if (isNaN(value)) {
-    alert(`${value} isn't number`);
-
-    setNumberButton.disabled = false;
-
-    return;
-  }
-
-  await contract.methods.setNumber(value).send({ from: accountAddress });
-
-  setNumberButton.disabled = false;
-}
+  enableButtons(HTMLElements.setNumberButton);
+});
