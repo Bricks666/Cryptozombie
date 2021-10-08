@@ -1,4 +1,4 @@
-import { errorsHandler } from "./errorsHandler";
+import { errorsHandler } from "./Errors/errorsHandler";
 import { RangeErrorE } from "./Errors/RangeError";
 
 function isValid(value) {
@@ -26,7 +26,9 @@ export async function setNumber(contract, accountAddress, field) {
       );
     }
 
-    await contract.methods.setNumber(value).send({ from: accountAddress });
+    await contract.methods.setNumber(value).send({
+      from: accountAddress,
+    });
   } catch (e) {
     errorsHandler(e);
   }
